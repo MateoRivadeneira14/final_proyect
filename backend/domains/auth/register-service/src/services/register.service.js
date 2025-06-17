@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 const User = require('../models/User');
 const Role = require('../models/Role');
 const generateCode = require('../utils/generateCode');
@@ -33,6 +34,15 @@ module.exports = async function registerService(data) {
     role_id: roleRecord.id,
     verification_code: verificationCode
   });
+
+  try {
+    await axios.post(process.env.SEND_CODE_URL, {
+      email,
+      code: verificationCode
+    });
+  } catch (err) {
+    console.error('Error enviando el código:', err.message);
+  }
 
   // Emitir evento ficticio
   console.log(`📨 Emitiendo evento: Usuario registrado -> Enviar código ${verificationCode} a ${email}`);
