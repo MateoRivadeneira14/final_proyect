@@ -1,0 +1,37 @@
+# Node.js
+node_modules/
+
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vite build
+dist/
+
+# Editor configs
+.vscode/
+.idea/
+
+# ZIPs y backups
+*.zip
+*.rar
+*.tar.gz
+*.tgz
+*.bak
+
+# Coverage y test
+coverage/
+*.lcov
+
+# Archivos temporales
+*.log
+*.tmp
+
+# React cache
+.cache/

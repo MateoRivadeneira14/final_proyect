@@ -22,7 +22,7 @@ module.exports = async function loginService(data) {
   if (!valid) throw { status: 401, message: 'Contraseña incorrecta' };
 
   const token = jwt.sign(
-    { id: user.id, role: user.Role.name, nickname: user.nickname },
+    { id: user.id, role: user.Role.name, nickname: user.nickname, email: user.email },
     process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -30,6 +30,7 @@ module.exports = async function loginService(data) {
   return {
     token,
     role: user.Role.name,
-    nickname: user.nickname
+    nickname: user.nickname,
+    email: user.email
   };
 };

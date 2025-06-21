@@ -1,46 +1,49 @@
+
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function PasswordResetPage() {
-  const [email, setEmail] = useState('');
-  const [reset_code, setResetCode] = useState('');
-  const [new_password, setNewPassword] = useState('');
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', code: '', new_password: '' });
+  const [error, setError] = useState('');
+  const [mensaje, setMensaje] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
-    setSuccess('');
+    setMensaje('');
     try {
-      await axios.post('http://localhost:3006/api/reset-password', {
-        email,
-        reset_code,
-        new_password
-      });
-      setSuccess('Contraseña cambiada exitosamente.');
-      setTimeout(() => navigate('/login'), 2000);
+      const res = await axios.post('http://localhost:3007/api/reset-password', form);
+      setMensaje('Contraseña actualizada. Redirigiendo...');
+      setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al cambiar la contraseña.');
+      setError(err.response?.data?.message || 'Error al restablecer contraseña');
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">Cambiar contraseña</h1>
-      {error && <p className="text-red-500 mb-2">{error}</p>}
-      {success && <p className="text-green-600 mb-2">{success}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input type="email" placeholder="Correo" value={email}
-               onChange={(e) => setEmail(e.target.value)} className="p-2 border rounded" required />
-        <input type="text" placeholder="Código de recuperación" value={reset_code}
-               onChange={(e) => setResetCode(e.target.value)} className="p-2 border rounded" required />
-        <input type="password" placeholder="Nueva contraseña" value={new_password}
-               onChange={(e) => setNewPassword(e.target.value)} className="p-2 border rounded" required />
-        <button type="submit" className="bg-green-600 text-white py-2 rounded">Cambiar</button>
-      </form>
+    <div className="min-h-screen bg-gradient-to-r from-indigo-500 to-blue-500 flex items-center justify-center px-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-2xl font-bold mb-4 text-center text-indigo-700">Restablecer Contraseña</h1>
+        {error && <p className="text-red-500 mb-4 text-sm text-center">{error}</p>}
+        {mensaje && <p className="text-green-600 mb-4 text-sm text-center">{mensaje}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="email" name="email" placeholder="Correo" value={form.email}
+            onChange={handleChange} className="w-full p-2 border rounded" required />
+          <input type="text" name="code" placeholder="Código recibido" value={form.code}
+            onChange={handleChange} className="w-full p-2 border rounded" required />
+          <input type="password" name="new_password" placeholder="Nueva contraseña" value={form.new_password}
+            onChange={handleChange} className="w-full p-2 border rounded" required />
+          <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded">
+            Restablecer
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

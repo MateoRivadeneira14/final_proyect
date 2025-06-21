@@ -1,16 +1,17 @@
-import Navbar from '../../../components/Navbar';
 
-import { useParams } from 'react-router-dom';
+import Navbar from '../../../components/Navbar';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function EstudianteDashboard() {
-  const { nick } = useParams();
+  const { user } = useAuth();
 
   return (
     <>
       <Navbar />
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Bienvenido, {nick}</h1>
-        <p>Aquí puedes ver tu historial, hacer solicitudes y consultar recursos.</p>
+      <div className="p-4">
+        <h1 className="text-xl font-bold">Bienvenido, {user?.nickname}</h1>
+        <p className="text-sm">Rol: {user?.role}</p>
+        <p className="text-sm">Correo: {user?.email}</p>
       </div>
     </>
   );
